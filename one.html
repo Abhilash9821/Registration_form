@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Registrations</title>
+    <style>
+        body {
+            background: url('https://files.123freevectors.com/wp-content/original/128078-abstract-green-black-and-white-intersecting-lines-stripes-background-vector.jpg') top center fixed;
+            background-size: cover;
+            background-attachment: scroll;
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 1);
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: #056d47;
+            font-size: 20px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes tick {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .tick-animation {
+            display: inline-block;
+            animation: tick 0.5s ease-in-out;
+        }
+
+        input[type=text], textarea, select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #04AA6D;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: border-color 0.3s ease-in-out;
+            color: #333;
+        }
+
+        input[type=text]:focus, textarea:focus, select:focus {
+            border-color: #04855e;
+        }
+
+        input[type=submit] {
+            background-color: #04855e;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        input[type=submit]:hover {
+            background-color: #046c4e;
+        }
+
+        label {
+            margin-bottom: 12px;
+            display: block;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cicada2023-text {
+            font-family: 'Voice In My Head Regular', sans-serif;
+            font-size: 24px;
+            margin-top: 10px; /* Adjusted margin-top for better spacing */
+            font-weight: bold; /* Added bold styling */
+        }
+
+        .heading {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="cicadaupperlogo.png.jpeg" alt="Cicada Logo" width="300" height="80">
+        </div>
+        <div class="heading">OFFLINE REGISTRATION</div>
+        <form action="https://sheetdb.io/api/v1/c1s5qnsizcxcc" method="post" id="sheetdb-form">
+            <label for="fname">Name</label>
+            <input type="text" id="fname" name="data[Name]" placeholder="Your name.." style="font-size: 18px;">
+
+            <!-- Replace the input field with a drop-down menu -->
+            <label for="event">Choose Event:</label>
+            <select id="event" name="data[Eventname]" style="font-size: 16px;">
+                <option value="" disabled selected>Select an event</option>
+                <option value="Hacakthon">Hacakthon</option>
+                <option value="Paperazzi">Paperazzi</option>
+                <option value="Bug off">Bug off</option>
+                <option value="Code Blitz">Code Blitz</option>
+                <option value="Mystery Hunt">Mystery Hunt</option>
+                <option value="Tug of war">Tug of war</option>
+                <option value="Prototype Designing">Prototype Designing</option>
+                <option value="Short Circuit">Short Circuit</option>
+            </select>
+
+            <label for="mail">Mail Id</label>
+            <input type="text" id="mail" name="data[Emailaddress]" placeholder="Mail Id..">
+
+            <label for="phnnum">Phone Number</label>
+            <input type="text" id="phnnum" name="data[phnnum]" placeholder="Your phone number..">
+
+            <label for="subject">Semester</label>
+            <input type="text" id="Semester" name="data[Semester]" placeholder="Sem" style="font-weight: bold;">
+
+            <input type="submit" value="Submit">
+        </form>
+        <div id="success-message" class="success-message"></div>
+        <div class="cicada2023-text">CICADA2023</div>
+    </div>
+    <script>
+       document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('sheetdb-form');
+    var successMessage = document.getElementById('success-message');
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(function (errorMessage) {
+            errorMessage.remove(); // Remove existing error messages
+        });
+
+        if (validateForm()) {
+            form.querySelector('input[type="submit"]').setAttribute('disabled', 'true');
+
+            var generatedTokens = [];
+            var randomToken;
+
+            do {
+                randomToken = Math.floor(100000 + Math.random() * 900000);
+            } while (generatedTokens.includes(randomToken));
+
+            generatedTokens.push(randomToken);
+
+            var formData = new FormData(form);
+            formData.append("data[Token]", randomToken);
+            console.log("formData:", formData);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+            }).then(
+                function (response) {
+                    return response.json();
+                }
+            ).then(
+                function (data) {
+                    form.style.display = 'none';
+
+                    successMessage.innerHTML = "Registration successful! Your token number is: <span class='tick-animation'>" + randomToken + "</span>";
+                    successMessage.style.display = 'block';
+                }
+            );
+        }
+    });
+
+    function validateForm() {
+        var requiredFields = ['fname', 'event', 'mail', 'phnnum', 'Semester'];
+        var formValid = true;
+
+        requiredFields.forEach(function (fieldName) {
+            var field = document.getElementById(fieldName);
+            if (field.value.trim() === '') {
+                formValid = false;
+                displayError(field, "Please fill in this field.");
+            }
+        });
+
+        return formValid;
+    }
+
+    function displayError(field, message) {
+        var errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = "* " + message;
+
+        field.parentNode.insertBefore(errorMessage, field.nextSibling);
+    }
+});
+
+    </script>
+    
+    
+    
+</body>
+</html>
